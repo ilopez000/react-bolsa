@@ -1,26 +1,41 @@
-import React from 'react';
-import StockChart from './StockChart'; // Asegúrate de que la ruta sea correcta
-import StockBarChart from './StockBarChart'; // Asegúrate de que la ruta sea correcta
+import React, { useState } from 'react';
+import StockChart from './StockChart';
+import StockBarChart from './StockBarChart';
 import PieChartComponent from './PieChartComponent';
 
 function App() {
+  // Estado para controlar el número de días mostrados en los gráficos
+  const [daysToShow, setDaysToShow] = useState(30);
+
   return (
     <div className="App">
       <header className="App-header">
         <h1>Visualización de Datos de Acciones</h1>
       </header>
       <main>
-        {/* Gráfico de líneas para los precios de cierre */}
+        {/* Control deslizante para seleccionar el número de días */}
+        <div style={{ margin: '20px' }}>
+          <input
+            type="range"
+            min="5"
+            max="30"
+            value={daysToShow}
+            onChange={(e) => setDaysToShow(Number(e.target.value))}
+            style={{ width: '900px' }}
+          />
+          <p>Días mostrados: {daysToShow}</p>
+        </div>
+
+        {/* Gráfico de líneas con prop daysToShow */}
         <section>
-          <h2>Gráfico de Líneas</h2>
-          <StockChart />
+          <StockChart daysToShow={daysToShow} />
         </section>
 
-        {/* Gráfico de barras para los precios de cierre */}
+        {/* Gráfico de barras con prop daysToShow */}
         <section>
-          <h2>Gráfico de Barras</h2>
-          <StockBarChart />
+          <StockBarChart daysToShow={daysToShow} />
         </section>
+
         <section>
           <PieChartComponent />
         </section>

@@ -23,9 +23,8 @@ ChartJS.register(
   Legend
 );
 
-const StockChart = () => {
+const StockChart = ({ daysToShow }) => { // Recibir daysToShow como prop
   const [chartData, setChartData] = useState({});
-  const [daysToShow, setDaysToShow] = useState(30); // Estado inicial a 30 días
 
   const apiKey = 'demo';
   const symbol = 'IBM';
@@ -42,7 +41,8 @@ const StockChart = () => {
           return;
         }
 
-        const dates = Object.keys(series).reverse().slice(0, daysToShow); // Usa 'daysToShow' para limitar los días
+        // Limitar los datos al número de días especificado por daysToShow
+        const dates = Object.keys(series).reverse().slice(0, daysToShow);
         const prices = dates.map(date => series[date]['4. close']);
 
         setChartData({
@@ -63,7 +63,7 @@ const StockChart = () => {
     };
 
     fetchData();
-  }, [apiKey, apiUrl, symbol, daysToShow]);
+  }, [apiKey, apiUrl, symbol, daysToShow]); // Incluir daysToShow en las dependencias del efecto
 
   const options = {
     maintainAspectRatio: false,
@@ -73,20 +73,8 @@ const StockChart = () => {
   return (
     <div>
       <h2>Gráfico de Precios de Cierre Diarios - {symbol}</h2>
-      <div style={{ width: '900px', height: '600px' }}>
+      <div style={{ width: '600px', height: '400px' }}>
         {chartData.labels ? <Line data={chartData} options={options} /> : <p>Cargando gráfico...</p>}
-      </div>
-      {/* Contenedor para el slider con un ancho máximo de 900px */}
-      <div style={{ width: '900px', maxWidth: '100%', margin: '20px auto' }}>
-        <input
-          type="range"
-          min="5"
-          max="30"
-          value={daysToShow}
-          onChange={(e) => setDaysToShow(e.target.value)}
-          style={{ width: '100%' }}
-        />
-        <p>Días mostrados: {daysToShow}</p>
       </div>
     </div>
   );

@@ -21,9 +21,8 @@ ChartJS.register(
   Legend
 );
 
-const StockBarChart = () => {
+const StockBarChart = ({ daysToShow }) => { // Recibir daysToShow como prop
   const [chartData, setChartData] = useState({});
-  const [daysToShow, setDaysToShow] = useState(30);
 
   const apiKey = 'demo';
   const symbol = 'IBM';
@@ -40,8 +39,9 @@ const StockBarChart = () => {
           return;
         }
 
+        // Limitar los datos al número de días especificado por daysToShow
         const dates = Object.keys(series).reverse().slice(0, daysToShow);
-        const prices = dates.map(date => parseFloat(series[date]['4. close']));
+        const prices = dates.map(date => parseFloat(series[date]['5. volume']));
 
         setChartData({
           labels: dates,
@@ -60,24 +60,13 @@ const StockBarChart = () => {
     };
 
     fetchData();
-  }, [apiKey, apiUrl, symbol, daysToShow]);
+  }, [apiKey, apiUrl, symbol, daysToShow]); // Incluir daysToShow en las dependencias del efecto
 
   return (
     <div>
       <h2>Gráfico de Barras de Precios de Cierre Diarios - {symbol}</h2>
-      <div style={{ width: '900px', height: '600px' }}>
+      <div style={{ width: '600px', height: '400px' }}>
         {chartData.labels ? <Bar data={chartData} options={{ maintainAspectRatio: false, responsive: true }} /> : <p>Cargando gráfico...</p>}
-      </div>
-      <div style={{ width: '900px', maxWidth: '100%', margin: '20px auto' }}>
-        <input
-          type="range"
-          min="5"
-          max="30"
-          value={daysToShow}
-          onChange={(e) => setDaysToShow(e.target.value)}
-          style={{ width: '100%' }}
-        />
-        <p>Días mostrados: {daysToShow}</p>
       </div>
     </div>
   );
